@@ -26,7 +26,7 @@ function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt
 function zapNum(z){let d=(z||'').replace(/\D/g,''); if(d && !d.startsWith('55')) d='55'+d; return d;}
 function ls(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>el.hidden=true,2400)}
-async function copiar(txt,pre){try{await navigator.clipboard.writeText(txt);toast('Prompt copiado')}catch(e){if(pre){const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Texto selecionado: use Ctrl+C')}}}
+async function copiar(txt,pre){try{await navigator.clipboard.writeText(txt);toast('Prompt copiado');return true}catch(e){if(pre){const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Texto selecionado: use Ctrl+C')}}}
 
 /* ---------- dados públicos (sem o conteúdo pago) ---------- */
 const IAS_PUB = [
@@ -200,7 +200,8 @@ function genRender(hostId){
   <div class="outbox">
     <div class="head"><div><div class="eyebrow">Prompt para ${esc(C.ias[gen.ia].nome)}</div><strong>${esc(m.nome)}</strong></div>
       <button class="btn accent sm" id="${p}copy">Copiar prompt</button></div>
-    <pre id="${p}out">${esc(montarPrompt(gen.ia,gen.mod,d))}</pre>
+    <div class="term"><div class="term-bar"><i></i><i></i><i></i><span>prompt-${esc(gen.ia)}-${esc(gen.mod)}.txt</span><b></b></div>
+    <pre id="${p}out">${esc(montarPrompt(gen.ia,gen.mod,d))}</pre></div>
   </div>`;
   const f=document.getElementById(p+'F');
   f.addEventListener('input',()=>{
@@ -211,7 +212,9 @@ function genRender(hostId){
     document.getElementById(p+'out').textContent=montarPrompt(gen.ia,gen.mod,d);
   });
   f.addEventListener('submit',e=>e.preventDefault());
-  document.getElementById(p+'copy').onclick=()=>copiar(montarPrompt(gen.ia,gen.mod,d),document.getElementById(p+'out'));
+  const cb=document.getElementById(p+'copy');
+  cb.onclick=async()=>{const ok=await copiar(montarPrompt(gen.ia,gen.mod,d),document.getElementById(p+'out'));
+    if(ok){cb.classList.add('ok');cb.textContent='Copiado ✓';setTimeout(()=>{cb.classList.remove('ok');cb.textContent='Copiar prompt';},1800);}};
 }
 
 function escolhaIAsHTML(){
@@ -258,7 +261,7 @@ function areaRender(){
     return;
   }
   const email=sess.user.email;
-  if(carregando){host.innerHTML=`<div class="wrap"><div class="login panel"><p>Carregando sua área…</p></div></div>`;return;}
+  if(carregando){host.innerHTML=`<div class="wrap aluno"><div class="side"><div class="panel" style="display:grid;gap:12px"><div class="skel" style="height:44px"></div><div class="skel" style="height:12px"></div><div class="skel" style="height:8px"></div></div><div class="panel" style="display:grid;gap:10px">${'<div class="skel" style="height:14px"></div>'.repeat(7)}</div></div><div style="display:grid;gap:16px;align-content:start"><div class="skel" style="height:96px;border-radius:16px"></div><div class="skel" style="height:40px;width:60%"></div><div class="skel" style="height:280px;border-radius:14px"></div></div></div>`;return;}
   if(erroArea){host.innerHTML=`<div class="wrap"><div class="login panel form"><p>${erroArea}</p><button class="btn accent" id="tentar">Tentar de novo</button></div></div>`;document.getElementById('tentar').onclick=carregarAluno;return;}
   if(!ativa(ass)){
     const motivo = !ass ? `Não encontramos assinatura para <b>${esc(email)}</b>.` :
@@ -294,6 +297,8 @@ function areaRender(){
       <details class="panel lessons" ${matchMedia('(min-width:901px)').matches?'open':''}><summary><strong>Aulas do curso</strong></summary><nav aria-label="Aulas">${mods.map(n=>{const ax=aulas.filter(a=>a.modNum===n);return `<div class="mod"><h4>Módulo ${n} · ${esc(ax[0].mod)}</h4>${ax.map(a=>`<button class="lesson-btn ${done[a.id]?'done':''}" aria-current="${a.id===aula.id&&aTab==='aulas'}" data-l="${a.id}"><span class="dot"></span>${esc(a.t)}</button>`).join('')}</div>`}).join('')}</nav></details>
     </aside>
     <div style="min-width:0">
+      <div class="welcome"><div><span class="eyebrow">Sua área Promptask</span><h2>Olá, ${esc(email.split('@')[0])}! O que vamos <span class="serif">criar</span> hoje?</h2></div>
+        <div class="stats"><div><b>${iasLiberadas().length}</b>IAs liberadas</div><div><b>${iasLiberadas().length*C.modelos.length}</b>prompts</div><div><b>${feitas}/${aulas.length}</b>aulas feitas</div></div></div>
       <div class="atabs">${[['aulas','Aulas'],['prompts','Meus prompts'],['gerador','Gerador'],['conta','Minha assinatura']].map(([k,l])=>`<button class="tab" aria-selected="${aTab===k}" data-t="${k}">${l}</button>`).join('')}</div>
       <div id="aBody"></div>
     </div></div>`;

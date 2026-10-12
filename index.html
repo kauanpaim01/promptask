@@ -251,6 +251,60 @@ dialog ul{padding-left:18px}
 }
 </style>
 <style>img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+
+<style>
+/* ===== movimento e acabamento ===== */
+@keyframes pt-rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pt-pop{0%{transform:scale(1)}45%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes pt-shimmer{from{background-position:-500px 0}to{background-position:500px 0}}
+@keyframes pt-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pt-caret{50%{opacity:0}}
+.btn{transition:transform .16s ease,box-shadow .22s ease,background-color .2s,color .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px -12px var(--accent)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn.ok{background:var(--ok)!important;border-color:var(--ok)!important;color:#fff!important;animation:pt-pop .35s ease}
+.card{transition:transform .22s cubic-bezier(.2,.7,.2,1),box-shadow .22s,border-color .22s}
+.card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -26px rgba(19,21,44,.55);border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.tab{transition:background-color .2s,color .2s,border-color .2s,transform .15s}
+.tab:hover{transform:translateY(-1px);border-color:var(--accent)}
+.hero .grid>*{animation:pt-rise .7s cubic-bezier(.2,.7,.2,1) both}
+.hero .grid>*:nth-child(2){animation-delay:.12s}
+.ficha{animation:pt-float 6s ease-in-out 1s infinite}
+#area .welcome,#area .side>*,#area .atabs,#area #aBody>*,#area .login{animation:pt-rise .55s cubic-bezier(.2,.7,.2,1) both}
+#area .side>*:nth-child(2){animation-delay:.07s}
+#area .atabs{animation-delay:.05s}
+#area #aBody>*{animation-delay:.1s}
+#area .cards .card{animation:pt-rise .5s cubic-bezier(.2,.7,.2,1) both}
+#area .cards .card:nth-child(2){animation-delay:.05s}#area .cards .card:nth-child(3){animation-delay:.1s}
+#area .cards .card:nth-child(4){animation-delay:.15s}#area .cards .card:nth-child(5){animation-delay:.2s}
+#area .cards .card:nth-child(6){animation-delay:.25s}
+#area .gen>*{animation:pt-rise .5s cubic-bezier(.2,.7,.2,1) both}#area .gen>*:nth-child(2){animation-delay:.08s}
+.lesson-btn{transition:background-color .15s,padding-left .2s}
+.lesson-btn:hover{padding-left:16px}
+.lesson-btn.done .dot{animation:pt-pop .35s}
+.progress i{transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.form input,.form select,.form textarea{transition:border-color .2s,box-shadow .2s}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent);outline:none}
+/* janela de terminal do prompt */
+.term{border-radius:14px;overflow:hidden;background:var(--code-bg);box-shadow:0 24px 50px -30px rgba(19,21,44,.7)}
+.term-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--f-mono);font-size:12px;color:#9DA2C8}
+.term-bar i{width:10px;height:10px;border-radius:50%;display:block}
+.term-bar i:nth-child(1){background:#FF6B6B}.term-bar i:nth-child(2){background:#22D3B6}.term-bar i:nth-child(3){background:#8592FF}
+.term-bar span{margin-left:8px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.term-bar b{width:7px;height:14px;background:#22D3B6;display:inline-block;animation:pt-caret 1s steps(1) infinite}
+.term pre{border-radius:0!important;max-height:560px}
+/* boas-vindas */
+.welcome{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:18px;background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 14%,var(--surface)),var(--surface) 60%);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+.welcome h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;margin-top:4px}
+.welcome h2 .serif{color:var(--accent)}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stats div{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:12px;color:var(--muted);min-width:96px}
+.stats b{display:block;font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.1}
+/* carregamento */
+.skel{border-radius:8px;background:linear-gradient(90deg,var(--sunk) 0,var(--line) 50%,var(--sunk) 100%);background-size:1000px 100%;animation:pt-shimmer 1.3s infinite linear}
+.toast{animation:pt-rise .3s ease both}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
 <header class="top">

@@ -33,16 +33,25 @@ async function hmac(chave: string, msg: string) {
   return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-async function autenticado(req: Request, bruto: string, corpo: any) {
-  if (!SECRET) return false;
+// Aceita a chave no corpo OU a assinatura no cabeçalho. Devolve o motivo quando recusa (sem expor a chave).
+async function autenticado(req: Request, bruto: string, corpo: any): Promise<string | null> {
+  const secret = (Deno.env.get("CAKTO_WEBHOOK_SECRET") ?? SECRET).trim();
+  if (!secret) return "CAKTO_WEBHOOK_SECRET não configurado no Supabase";
+  if (typeof corpo?.secret === "string" && igual(corpo.secret.trim(), secret)) return null;
   const ts = req.headers.get("x-cakto-timestamp");
   const sig = req.headers.get("x-cakto-signature");
   if (ts && sig) {
-    if (Math.abs(Date.now() / 1000 - Number(ts)) > 300) return false;
-    const esperado = "v1=" + await hmac(SECRET, `${ts}.${bruto}`);
-    return igual(sig, esperado);
+    let t = Number(ts); if (t > 1e12) t = t / 1000;
+    if (Math.abs(Date.now() / 1000 - t) > 300) return "assinatura com horário fora da janela de 5 minutos";
+    const recebida = sig.replace(/^v1=/, "").trim();
+    const hex = await hmac(secret, `${ts}.${bruto}`);
+    const b64 = btoa(String.fromCharCode(...hex.match(/../g)!.map((h) => parseInt(h, 16))));
+    if (igual(recebida.toLowerCase(), hex) || igual(recebida, b64)) return null;
+    const tamCorpo = typeof corpo?.secret === "string" ? corpo.secret.length : 0;
+    return `assinatura do cabeçalho não confere (formato ${sig.slice(0, 3)}…, ${recebida.length} caracteres; ts ${String(ts).length} dígitos; chave no corpo ${tamCorpo} caracteres; chave configurada ${secret.length} caracteres)`;
   }
-  return typeof corpo?.secret === "string" && igual(corpo.secret, SECRET);
+  const tam = typeof corpo?.secret === "string" ? corpo.secret.length : 0;
+  return `chave do corpo não confere (recebida com ${tam} caracteres, configurada com ${secret.length})`;
 }
 
 // "Promptask · 2 IAs · Anual" -> { plano: 2, periodo: "anual" }
@@ -60,7 +69,11 @@ Deno.serve(async (req) => {
   const bruto = await req.text();
   let corpo: any;
   try { corpo = JSON.parse(bruto); } catch { return new Response("JSON inválido", { status: 400 }); }
-  if (!(await autenticado(req, bruto, corpo))) return new Response("Não autorizado", { status: 401 });
+  const recusa = await autenticado(req, bruto, corpo);
+  if (recusa) {
+    await db.from("eventos_pagamento").insert({ evento: corpo?.event ?? null, erro: "recusado: " + recusa, processado: false });
+    return new Response("Não autorizado", { status: 401 });
+  }
 
   const evento: string = corpo.event ?? "";
   const lista = Array.isArray(corpo.data) ? corpo.data : [corpo.data ?? {}];
