@@ -1,6 +1,6 @@
 /* ===================== CONFIGURAÇÃO ===================== */
-const SUPABASE_URL = 'https://jknghrcgtlpjodilzpdx.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprbmdocmNndGxwam9kaWx6cGR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4MzI2NjYsImV4cCI6MjEwNzQwODY2Nn0.U01HV1XP8UXvMPaMVlFgEZP_Acgbjq5cVd-Tfq-b4_o'; // chave pública (pode ficar no site)
+const SUPABASE_URL = 'https://jhkgycttsuttrifuexzx.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impoa2d5Y3R0c3V0dHJpZnVleHp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4MzQ2OTIsImV4cCI6MjEwNzQxMDY5Mn0.5e8dZgfB_7fqw5WkSc2DlekY3YP34vw9VwrgoAaZo2A'; // chave pública (pode ficar no site)
 
 // Links de pagamento da Cakto: cole cada link entre as aspas.
 const CHECKOUT = {
