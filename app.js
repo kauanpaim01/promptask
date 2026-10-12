@@ -19,6 +19,7 @@ const PRECOS = {
 };
 /* ======================================================== */
 
+const SUPORTE = 'https://wa.me/5546999248974?text=Ol%C3%A1!%20Preciso%20de%20ajuda%20com%20a%20Promptask.';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const brl = v => 'R$ ' + v.toFixed(2).replace('.', ',');
 function preco(n,per){return PRECOS[per][Math.min(Math.max(n,1),4)]}
@@ -250,6 +251,7 @@ function areaRender(){
       <button class="btn accent" type="submit" id="lBtn">Receber link de acesso</button>
       <span style="color:var(--muted);font-size:13px">Você recebe um link no e-mail. Não precisa de senha.</span>
       <a class="btn ghost" href="#planos">Ainda não sou assinante: ver planos</a>
+      <a href="${SUPORTE}" target="_blank" rel="noopener" style="text-align:center;font-size:14px;color:var(--muted)">Não consigo entrar: falar com o suporte no WhatsApp</a>
     </form></div>`;
     document.getElementById('loginF').addEventListener('submit',async e=>{e.preventDefault();
       const email=document.getElementById('lEmail').value.trim().toLowerCase(), msg=document.getElementById('lMsg'), btn=document.getElementById('lBtn');
@@ -274,6 +276,7 @@ function areaRender(){
       <p style="color:var(--muted);font-size:14px">Acabou de pagar? A liberação leva alguns minutos depois que o pagamento é aprovado. Use o mesmo e-mail da compra.</p>
       <button class="btn accent" id="recarregar">Verificar de novo</button>
       <a class="btn ghost" href="#planos">Ver planos</a>
+      <a class="btn ghost sm" href="${SUPORTE}" target="_blank" rel="noopener">Já paguei e não liberou: falar no WhatsApp</a>
       <button class="btn ghost sm" id="sair">Sair</button></div></div>`;
     document.getElementById('recarregar').onclick=carregarAluno;
     document.getElementById('sair').onclick=sair;
