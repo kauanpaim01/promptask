@@ -4,8 +4,14 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 // Links de pagamento da Cakto: cole cada link entre as aspas.
 const CHECKOUT = {
-  'mensal-1': '', 'mensal-2': '', 'mensal-3': '', 'mensal-4': '',
-  'anual-1': '',  'anual-2': '',  'anual-3': '',  'anual-4': ''
+  'mensal-1': 'https://pay.cakto.com.br/39zijn2_1196108',
+  'mensal-2': 'https://pay.cakto.com.br/ez38r8c_1196173',
+  'mensal-3': 'https://pay.cakto.com.br/je9f59n_1196180',
+  'mensal-4': 'https://pay.cakto.com.br/35h3fni_1196238',
+  'anual-1':  'https://pay.cakto.com.br/ytzy2pj_1196252',
+  'anual-2':  'https://pay.cakto.com.br/t9uoyj4_1196261',
+  'anual-3':  'https://pay.cakto.com.br/awtt9pk_1196267',
+  'anual-4':  'https://pay.cakto.com.br/qij8wte_1196274'
 };
 const PRECOS = {
   mensal: {1:21.99, 2:24.99, 3:27.99, 4:29.99}, // 4 = todas as IAs
